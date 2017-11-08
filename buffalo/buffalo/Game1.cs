@@ -43,7 +43,7 @@ namespace buffalo
 
             // TODO: use this.Content to load your game content here
             pult = Content.Load<Texture2D>("Oberfläche-Pult");
-            radar = new Radar(Content);
+            radar = new Radar(Content, new Map());
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace buffalo
                 Exit();
 
             // TODO: Add your update logic here
-            radar.Update();
+            radar.Update(new Vector2(0,0));
 
             base.Update(gameTime);
         }

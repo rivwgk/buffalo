@@ -12,9 +12,9 @@ namespace buffalo
 {
     class Insel
     {
-        private Vector2[] corner;
-        private Vector2 position;
-
+        private Vector2[] _corner;
+        private Vector2 _position;
+        private int _id;
         public Insel(float maxRad, int mainCornerNum, float regularity, float spiks)    //-, -, 1-0, 1-0
         {
 
@@ -22,7 +22,7 @@ namespace buffalo
 
         public float getDistance(Vector2 pos)
         {
-            return (position - pos).Length();
+            return (_position - pos).Length();
         }
 
         public bool collision(Vector2 pos, float rot)       //collision with submarin, pos Submarin + direction (eliips Collisionbox)
