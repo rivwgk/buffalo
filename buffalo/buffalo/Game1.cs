@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 namespace buffalo
 {
     /// <summary>
@@ -11,6 +10,8 @@ namespace buffalo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D pult;
+        Radar radar;
         
         public Game1()
         {
@@ -41,6 +42,8 @@ namespace buffalo
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            pult = Content.Load<Texture2D>("Oberfläche-Pult");
+            radar = new Radar(Content);
         }
 
         /// <summary>
@@ -63,6 +66,7 @@ namespace buffalo
                 Exit();
 
             // TODO: Add your update logic here
+            radar.Update();
 
             base.Update(gameTime);
         }
@@ -76,7 +80,12 @@ namespace buffalo
             GraphicsDevice.Clear(Color.PaleVioletRed);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
 
+            spriteBatch.Draw(pult, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            radar.Draw(spriteBatch);
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
