@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using System;
+
 namespace buffalo
 {
     /// <summary>
@@ -8,9 +11,16 @@ namespace buffalo
     /// </summary>
     public class Game1 : Game
     {
+        const int REGLER_SKALE_X = 56;
+        const int REGLER_SKALE_Y = 114;
+        const int REGLER_SKALE_WIDTH = 41;
+        const int REGLER_SKALE_HEIGHT = 111;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D pult;
+        Texture2D kurs;
+        Texture2D stuff1, stuff2;
         Radar radar;
         
         public Game1()
@@ -43,6 +53,9 @@ namespace buffalo
 
             // TODO: use this.Content to load your game content here
             pult = Content.Load<Texture2D>("Oberfläche-Pult");
+            kurs = Content.Load<Texture2D>("Rahmen-Kursregler");
+            stuff1 = Content.Load<Texture2D>("Rahmen-Schieberegler");
+            stuff2 = Content.Load<Texture2D>("Schieberegler");
             radar = new Radar(Content, new Map());
         }
 
@@ -67,7 +80,6 @@ namespace buffalo
 
             // TODO: Add your update logic here
             radar.Update(new Vector2(0,0));
-
             base.Update(gameTime);
         }
 
@@ -83,6 +95,9 @@ namespace buffalo
             spriteBatch.Begin();
 
             spriteBatch.Draw(pult, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            spriteBatch.Draw(kurs, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
+            spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
 
             spriteBatch.End();

@@ -19,6 +19,7 @@ namespace buffalo
         const float FADEOUT_RATE = 0.97f; //intensity *= fadeOutRate
         const int RADAR_DOT_SIZE = 5;
         const float RADAR_OFFSET = 22f/180f * (float)Math.PI;
+        const int RADAR_DISPLAY_RAD = 130;
 
         private Texture2D _radarLine;
         private Texture2D _radarDot;
@@ -115,9 +116,14 @@ namespace buffalo
                 {
                     if (p.GetObjId() != -1)
                     {
+                        int x = (int)(p.GetPos().X + _centerPosition.X);
+                        int y = (int)(p.GetPos().Y + _centerPosition.Y);
+                        x -= x % RADAR_DOT_SIZE;                            //fancy Pixel eindruck
+                        y -= y % RADAR_DOT_SIZE;
+
                         spriteBatch.Draw(
                             _radarDot, 
-                            new Rectangle((int)(p.GetPos().X + _centerPosition.X), (int)(p.GetPos().Y + _centerPosition.Y), RADAR_DOT_SIZE, RADAR_DOT_SIZE), 
+                            new Rectangle(x, y, RADAR_DOT_SIZE, RADAR_DOT_SIZE), 
                             Color.White * p.GetIntensity()
                             );
                     }
@@ -146,15 +152,15 @@ namespace buffalo
             spriteBatch.Draw(_radarLine, _centerPosition, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
             _radarPoints.Draw(spriteBatch);
         }
+
         public void Update(Vector2 suPos)
         {
             _angle += 0.05f;
             if (_angle > Math.PI * 2)
                 _angle = 0f;
-
             _radarPoints.Upadte();
             {
-                _radarPoints.SetPoint(_angle, _rnd.Next(20, 100), 1);
+                _radarPoints.SetPoint(_angle, _rnd.Next(0, RADAR_DISPLAY_RAD), 1);
             }
         }
     }
