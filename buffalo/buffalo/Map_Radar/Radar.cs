@@ -118,6 +118,10 @@ namespace buffalo
                     {
                         int x = (int)(p.GetPos().X + _centerPosition.X);
                         int y = (int)(p.GetPos().Y + _centerPosition.Y);
+                        if (y % RADAR_DOT_SIZE > RADAR_DOT_SIZE / 2)
+                            y += RADAR_DOT_SIZE;
+                        if (x % RADAR_DOT_SIZE > RADAR_DOT_SIZE / 2)
+                            x += RADAR_DOT_SIZE;
                         x -= x % RADAR_DOT_SIZE;                            //fancy Pixel eindruck
                         y -= y % RADAR_DOT_SIZE;
 

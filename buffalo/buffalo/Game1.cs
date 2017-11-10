@@ -22,6 +22,7 @@ namespace buffalo
         Texture2D kurs;
         Texture2D stuff1, stuff2;
         Radar radar;
+        Map map;
         
         public Game1()
         {
@@ -56,7 +57,8 @@ namespace buffalo
             kurs = Content.Load<Texture2D>("Rahmen-Kursregler");
             stuff1 = Content.Load<Texture2D>("Rahmen-Schieberegler");
             stuff2 = Content.Load<Texture2D>("Schieberegler");
-            radar = new Radar(Content, new Map());
+            map = new Map(100, 100, 1, null);
+            radar = new Radar(Content, map);
         }
 
         /// <summary>
@@ -99,6 +101,7 @@ namespace buffalo
             spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
+            map.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
