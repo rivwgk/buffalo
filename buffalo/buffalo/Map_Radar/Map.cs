@@ -20,7 +20,7 @@ namespace buffalo
         {
             _myTex = ilandTex;
             _ilands = new Insel[1];//numIlands];
-            //for(int i = 0; i < numIlands; ++i)
+            for(int i = 0; i < numIlands; ++i)
             {
                 _ilands[/*i*/0] = new Insel(200, 5, 0.5f, 0.8f, /*i*/0, new Vector2(300f, 250f));
             }

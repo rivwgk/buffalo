@@ -101,7 +101,6 @@ namespace buffalo
             spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
-            map.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);

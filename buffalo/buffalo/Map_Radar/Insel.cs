@@ -116,7 +116,7 @@ namespace buffalo
                     */
                     bool sigend = (signeds[cornerNum / 8] & (1 << cornerNum % 8)) > 0;
                     ortogonalOffset = (float)_rnd.NextDouble() * spiks * ( sigend ? -1f : 1f);    //C# is unable to convert int too bool
-
+                    bool realation = nighbarPoints[0].LengthSquared() > nighbarPoints[1].LengthSquared();
                     Vector2 collisionCorner; //vec(o,p);
                     if (sigend)                                                                   //rotation 90° + or -
                     {
@@ -133,11 +133,9 @@ namespace buffalo
                     else
                         ortogonalMaxOffset = ( newPos.Y * collisionCorner.X / collisionCorner.Y - newPos.X ) / ( delta.X - delta.Y * newPos.X / newPos.Y );
                     //TODO only beacause Test start
+                    ortogonalMaxOffset = Math.Abs(ortogonalMaxOffset);
                     if (ortogonalMaxOffset > 1)
                         ortogonalMaxOffset = 1f;
-                    if (ortogonalMaxOffset < 0)
-                        ortogonalMaxOffset = 0;
-                    Console.WriteLine(ortogonalMaxOffset + "--" + ortogonalOffset);
                     delta *= ortogonalMaxOffset * ortogonalOffset;
                     //Test end
                     _corner[cornerNum] = newPos + delta;
