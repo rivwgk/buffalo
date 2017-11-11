@@ -20,6 +20,7 @@ namespace buffalo
         const int RADAR_DOT_SIZE = 5;
         const float RADAR_OFFSET = 22f/180f * (float)Math.PI;
         const int RADAR_DISPLAY_RAD = 130;
+        const float RADAR_RANGE = 300f;
 
         private Texture2D _radarLine;
         private Texture2D _radarDot;
@@ -94,12 +95,23 @@ namespace buffalo
                     _points[i] = new Points();
                 }
             }
-
+            public void SetPoint(float angle, Vector2 position, int objId)
+            {
+                int radPos = (int)(angle / (float)Math.PI / 2f * _resulution);
+                if (radPos != _lastUpdatedAngle)                                     //dont overwrite a actually new Point
+                {
+                    _points[radPos].SetPoint(objId, position);
+                    _lastUpdatedAngle = radPos;
+                }
+            }
             public void SetPoint(float angle, float distance, int objId)
             {
                 int radPos = (int) (angle / (float)Math.PI / 2f * _resulution);
-                _points[radPos].SetPoint(objId, new Vector2((float)Math.Cos(angle) * distance, (float)Math.Sin(angle) * distance));
-                _lastUpdatedAngle = radPos;
+                if (radPos != _lastUpdatedAngle)                                     //dont overwrite a actually new Point
+                {
+                    _points[radPos].SetPoint(objId, new Vector2((float)Math.Cos(angle) * distance, (float)Math.Sin(angle) * distance));
+                    _lastUpdatedAngle = radPos;
+                }
             }
 
             public void Upadte()
@@ -164,7 +176,9 @@ namespace buffalo
                 _angle = 0f;
             _radarPoints.Upadte();
             {
-                _radarPoints.SetPoint(_angle, _rnd.Next(0, RADAR_DISPLAY_RAD), 1);
+                Map.MapPoint collisionPoint = _map.RdarDetection(suPos, RADAR_RANGE, _angle);
+                if(collisionPoint.GetID() != -1)
+                    _radarPoints.SetPoint(_angle, collisionPoint.GetPos() / RADAR_RANGE * RADAR_DISPLAY_RAD, collisionPoint.GetID());
             }
         }
     }

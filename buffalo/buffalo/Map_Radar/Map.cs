@@ -16,6 +16,24 @@ namespace buffalo
     {
         private Insel[] _ilands;
         private Texture2D _myTex;
+        public class MapPoint
+        {
+            public MapPoint(int ilandId, Vector2 position)
+            {
+                _ilandId = ilandId;
+                _position = position;
+            }
+            public MapPoint()
+            {
+                _ilandId = -1;
+            }
+            private int _ilandId;
+            public int GetID()
+            { return _ilandId; }
+            private Vector2 _position;
+            public Vector2 GetPos()
+            { return (_ilandId < 0 ? new Vector2(0,0) : _position); }
+        }
         public Map(int width, int height, int numIlands, Texture2D ilandTex)
         {
             _myTex = ilandTex;
@@ -52,6 +70,22 @@ namespace buffalo
                     0
                     );
             }
+        }
+
+        public MapPoint RdarDetection(Vector2 position, float length, float angle) //direction.Length is importend
+        {
+            Vector2 direction = new Vector2(length * (float)Math.Cos(angle), length * (float)Math.Sin(angle));
+            MapPoint mapPoint = new MapPoint();
+            for(int i = 0; i < _ilands.Length; ++i)
+            {
+                if(_ilands[i].getDistance(position) < length)
+                {
+                    mapPoint = _ilands[i].Collision(position, direction);
+                    if (mapPoint.GetID() != -1)
+                        break;
+                }
+            }
+            return mapPoint;
         }
     }
 }

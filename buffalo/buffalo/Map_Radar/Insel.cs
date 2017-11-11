@@ -15,6 +15,7 @@ namespace buffalo
         Random _rnd;
         private const int CORER_RESULUTION = 3;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
+        private float[] _cornerAngle;               //cos(rad)
         public Vector2[] GetCorner()
         {
             Vector2[] result = new Vector2[_corner.Length]; 
@@ -26,8 +27,10 @@ namespace buffalo
         }
         private Vector2 _position;
         private int _id;
+        private float _maxRad;
         public Insel(float maxRad, int mainCornerNum, float regularity, float spiks, int id, Vector2 centerPosition)    //-, -, 1-0, 1-0
         {
+            _maxRad = 0f;
             int subCornerSum = 0;                       //every Resulution Point more is async split from every edge))
             for (int i = 1; i <= CORER_RESULUTION; ++i)
                 subCornerSum += subCornerSum + 1;
@@ -143,23 +146,70 @@ namespace buffalo
                     {
                         _corner[cornerNum] *= maxRad / _corner[cornerNum].Length();
                     }
+
+                    if (_corner[cornerNum].Length() > _maxRad)
+                        maxRad = _corner[cornerNum].Length();
                 } while (cornerNum + subResulutionLvl < (subCornerSum + 1) * mainCornerNum);
+            }
+
+            _cornerAngle = new float[_corner.Length];
+            for(int i = 0; i < _corner.Length; ++i)
+            {
+                _cornerAngle[i] =_corner[i].X / _corner[i].Length(); //winkel zur Wagerechten
             }
         }
 
-        public float getDistance(Vector2 pos)
+        public float getDistance(Vector2 pos)               //return minimal posible distance approximated
         {
-            return (_position - pos).Length();
+            return (_position - pos).Length() - _maxRad;
         }
 
-        public bool collision(Vector2 pos, float rot)       //collision with submarin, pos Submarin + direction (eliips Collisionbox)
+        public bool Collision(Vector2 pos, float rot)       //collision with submarin, pos Submarin + direction (eliips Collisionbox)
         {
             return false;
         }
 
-        public Vector2 collision(Vector2 pos, Vector2 direction)    //return first Collision Point between strahl and Iland
+        public Map.MapPoint Collision(Vector2 pos, Vector2 direction)    //return first Collision Point between strahl and Iland, direction.Length is importend
         {
-            return new Vector2(0, 0);
+            pos -= _position;           //transform Koordinatensystem, now cenmter iland is center
+            float minAngle = pos.X / pos.Length();
+            float maxAngle = (pos.X + direction.X) / (pos + direction).Length();
+            int i = 0;
+            bool[] sigend = new bool[2] ;                //safes the last signed from the operateion ortogonalVec(direction) * _corner (beacuse, when the signed switch -> the last poiont and this have cross the radar line
+            Vector2 delta;              //delta vec to calculate sigend
+            Map.MapPoint mapPoint;
+
+            direction = new Vector2(direction.Y, -direction.X);         //ortogonal Vec
+
+            while (_cornerAngle[i] < minAngle) ++i; //go to the first possiblepoint
+            i--;
+            //TODO overthinking problem: cos is not eindeutig, rotation diretion is not equal
+            delta = _corner[i] - pos;
+            sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
+            if (maxAngle < minAngle)
+                maxAngle += (float)Math.PI * 2f;
+            float overflow = 0f;
+            do
+            {
+                i++;
+                if (i == _corner.Length)
+                {
+                    i = 0;
+                    overflow = (float)Math.PI * 2f;
+                }
+                sigend[0] = sigend[1];
+                delta = _corner[i] - pos;
+                sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
+            } while (sigend[1] == sigend[0] && _cornerAngle[i] + overflow <= maxAngle);
+
+            if (sigend[1] != sigend[0])
+            {
+                delta = (_corner[i] + _corner[i - 1]) * 0.5f;
+                mapPoint = new Map.MapPoint(_id, delta - pos);
+            }
+            else
+                mapPoint = new Map.MapPoint();
+            return mapPoint;
         }
     }
 }
