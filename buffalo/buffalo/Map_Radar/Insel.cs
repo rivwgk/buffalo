@@ -15,7 +15,14 @@ namespace buffalo
         Random _rnd;
         private const int CORER_RESULUTION = 3;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
-        private float[] _cornerAngle;               //cos(rad)
+        private float[] _cornerAngle;          
+        private float VecAngle(Vector2 vec)         //return angle to vec(1, 0)
+        {
+            float angle = (float)Math.Cos(vec.X / vec.Length());
+            if (vec.X < 0f)
+                angle = (float)Math.PI - angle;
+            return angle;
+        }
         public Vector2[] GetCorner()
         {
             Vector2[] result = new Vector2[_corner.Length]; 
@@ -155,7 +162,7 @@ namespace buffalo
             _cornerAngle = new float[_corner.Length];
             for(int i = 0; i < _corner.Length; ++i)
             {
-                _cornerAngle[i] =_corner[i].X / _corner[i].Length(); //winkel zur Wagerechten
+                _cornerAngle[i] = VecAngle(_corner[i]);
             }
         }
 
@@ -172,8 +179,8 @@ namespace buffalo
         public Map.MapPoint Collision(Vector2 pos, Vector2 direction)    //return first Collision Point between strahl and Iland, direction.Length is importend
         {
             pos -= _position;           //transform Koordinatensystem, now cenmter iland is center
-            float minAngle = pos.X / pos.Length();
-            float maxAngle = (pos.X + direction.X) / (pos + direction).Length();
+            float minAngle = VecAngle(pos);
+            float maxAngle = VecAngle(pos + direction);
             int i = 0;
             bool[] sigend = new bool[2] ;                //safes the last signed from the operateion ortogonalVec(direction) * _corner (beacuse, when the signed switch -> the last poiont and this have cross the radar line
             Vector2 delta;              //delta vec to calculate sigend
