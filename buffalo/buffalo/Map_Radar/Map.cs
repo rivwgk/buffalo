@@ -40,7 +40,7 @@ namespace buffalo
             _ilands = new Insel[1];//numIlands];
             for(int i = 0; i < numIlands; ++i)
             {
-                _ilands[/*i*/0] = new Insel(200, 5, 0.5f, 0.8f, /*i*/0, new Vector2(300f, 250f));
+                _ilands[/*i*/0] = new Insel(200, 10, 0.4f, 0.8f, /*i*/0, new Vector2(300f, 250f));
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -50,6 +50,7 @@ namespace buffalo
                 _myTex = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
                 _myTex.SetData<Color>(new Color[] { Color.White });
             }
+
             Vector2[] ilandCorner = _ilands[0].GetCorner();
             Point[] points = new Point[2];
             Vector2 edge;

@@ -49,22 +49,23 @@ namespace buffalo
             regularity = 1f - regularity;                           //invert because is logical better
 
             float angle = 2 * (float)Math.PI / (float)mainCornerNum; 
-            float[] angles = new float[mainCornerNum];
+            float[] angles = new float[mainCornerNum + 1];
             angles[0] = 0f;
             float dAngle;
 
-            for(int i = 1; i < mainCornerNum; ++i)  //init mainCorners on Rad pos
+            for(int i = 1; i < mainCornerNum + 1; ++i)  //init mainCorners on Rad pos
             {
                 dAngle = angle + (2 * (float)_rnd.NextDouble() - 1f) * angle * regularity; //result C(6) -> 60° +- 60°*regularity
                 angles[i] = angles[i - 1] + dAngle;
             }
 
-            float resizeAngleScale = 2 * (float)Math.PI / angles[mainCornerNum - 1]; //resize angles, to set angleSUm to 2*PI
+            float resizeAngleScale = 2 * (float)Math.PI / angles[mainCornerNum]; //resize angles, to set angleSUm to 2*PI
             float r;
             for(int i = 0; i < mainCornerNum; ++i) ///set corner Points
             {
                 r = maxRad - maxRad * spiks * (float)_rnd.NextDouble();
-                angles[i] *= resizeAngleScale; 
+                Console.WriteLine(r);
+                angles[i] *= resizeAngleScale;
                 _corner[(subCornerSum + 1) * i] = new Vector2((float)Math.Cos(angles[i]) * r, (float)Math.Sin(angles[i]) * r);
             }
 
@@ -163,6 +164,7 @@ namespace buffalo
             for(int i = 0; i < _corner.Length; ++i)
             {
                 _cornerAngle[i] = VecAngle(_corner[i]);
+                Console.WriteLine("corner: " + _corner[i].Length());
             }
         }
 
@@ -207,7 +209,7 @@ namespace buffalo
                 sigend[0] = sigend[1];
                 delta = _corner[i] - pos;
                 sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
-            } while (sigend[1] == sigend[0] && _cornerAngle[i] + overflow <= maxAngle);
+            } while (sigend[1] == sigend[0] && _cornerAngle[i] + overflow <= maxAngle);     //sehr durchdahct: denn der letzte überprüfte punkt ist außerhalb des angegeben Bereichs, wichtig
 
             if (sigend[1] != sigend[0])
             {
