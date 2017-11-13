@@ -16,6 +16,7 @@ namespace buffalo
         const int REGLER_SKALE_WIDTH = 41;
         const int REGLER_SKALE_HEIGHT = 111;
 
+        Vector2 subPos;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D pult;
@@ -39,7 +40,7 @@ namespace buffalo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            subPos = new Vector2(300, 50);
             base.Initialize();
         }
 
@@ -81,7 +82,15 @@ namespace buffalo
                 Exit();
 
             // TODO: Add your update logic here
-            radar.Update(new Vector2(0,0));
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+                subPos.Y -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+                subPos.Y += 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+                subPos.X -= 1;
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                subPos.X += 1;
+            radar.Update(subPos);
             base.Update(gameTime);
         }
 
@@ -101,7 +110,8 @@ namespace buffalo
             spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
-            map.Draw(spriteBatch);
+            map.Draw(spriteBatch); //only test actuallay
+            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 5, (int)subPos.Y - 5, 10, 10), Color.White);
 
             spriteBatch.End();
             base.Draw(gameTime);

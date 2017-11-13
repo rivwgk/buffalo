@@ -40,7 +40,7 @@ namespace buffalo
             _ilands = new Insel[1];//numIlands];
             for(int i = 0; i < numIlands; ++i)
             {
-                _ilands[/*i*/0] = new Insel(200, 10, 0.4f, 0.8f, /*i*/0, new Vector2(300f, 250f));
+                _ilands[/*i*/0] = new Insel(200, 10, 0.1f, 0.8f, /*i*/0, new Vector2(300f, 250f));
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -64,7 +64,7 @@ namespace buffalo
                     _myTex,
                     new Rectangle((int)ilandCorner[i].X, (int)ilandCorner[i].Y, (int)edge.Length(), 1),
                     null,
-                    Color.Yellow,
+                   Color.Yellow,
                     angle,
                     origin,
                     SpriteEffects.None,

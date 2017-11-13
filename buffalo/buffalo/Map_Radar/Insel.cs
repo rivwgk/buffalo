@@ -13,7 +13,7 @@ namespace buffalo
     class Insel
     {
         Random _rnd;
-        private const int CORER_RESULUTION = 3;
+        private const int CORER_RESULUTION = 5;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
         private float[] _cornerAngle;          
         private float VecAngle(Vector2 vec)         //return angle to vec(1, 0)
@@ -41,6 +41,7 @@ namespace buffalo
             int subCornerSum = 0;                       //every Resulution Point more is async split from every edge))
             for (int i = 1; i <= CORER_RESULUTION; ++i)
                 subCornerSum += subCornerSum + 1;
+
             Console.WriteLine("ScubCorner:" + subCornerSum);
             _rnd = new Random();
             _position = centerPosition;
@@ -143,16 +144,16 @@ namespace buffalo
                         ortogonalMaxOffset = 1f;
                     else
                         ortogonalMaxOffset = ( newPos.Y * collisionCorner.X / collisionCorner.Y - newPos.X ) / ( delta.X - delta.Y * newPos.X / newPos.Y );
-                    //TODO only beacause Test start
+                    //ortogonal transformation
                     ortogonalMaxOffset = Math.Abs(ortogonalMaxOffset);
                     if (ortogonalMaxOffset > 1)
                         ortogonalMaxOffset = 1f;
                     delta *= ortogonalMaxOffset * ortogonalOffset;
-                    //Test end
+
                     _corner[cornerNum] = newPos + delta;
                     if(_corner[cornerNum].Length() > maxRad)                    //avoid that points escape
                     {
-                        _corner[cornerNum] *= maxRad / _corner[cornerNum].Length();
+                   //     _corner[cornerNum] *= maxRad / _corner[cornerNum].Length();
                     }
 
                     if (_corner[cornerNum].Length() > _maxRad)
@@ -183,6 +184,8 @@ namespace buffalo
             pos -= _position;           //transform Koordinatensystem, now cenmter iland is center
             float minAngle = VecAngle(pos);
             float maxAngle = VecAngle(pos + direction);
+            bool maxLoMin = maxAngle < minAngle;        //wenn min > max
+
             int i = 0;
             bool[] sigend = new bool[2] ;                //safes the last signed from the operateion ortogonalVec(direction) * _corner (beacuse, when the signed switch -> the last poiont and this have cross the radar line
             Vector2 delta;              //delta vec to calculate sigend
@@ -190,30 +193,43 @@ namespace buffalo
 
             direction = new Vector2(direction.Y, -direction.X);         //ortogonal Vec
 
-            while (_cornerAngle[i] < minAngle) ++i; //go to the first possiblepoint
-            i--;
-            //TODO overthinking problem: cos is not eindeutig, rotation diretion is not equal
+            while (_cornerAngle[i] < minAngle)//go to the first possiblepoint
+            {
+                ++i;
+                if (i == _corner.Length)
+                    i = 0;
+            }
+            if(!maxLoMin)
+                i--;
+
+            if (i < 0)
+                i += _corner.Length;
+
             delta = _corner[i] - pos;
             sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
-            if (maxAngle < minAngle)
-                maxAngle += (float)Math.PI * 2f;
-            float overflow = 0f;
+            
             do
             {
-                i++;
+                if (maxLoMin)
+                    i--;
+                else
+                    i++;
                 if (i == _corner.Length)
                 {
                     i = 0;
-                    overflow = (float)Math.PI * 2f;
+                }
+                if(i == -1)
+                {
+                    i = _corner.Length - 1;
                 }
                 sigend[0] = sigend[1];
                 delta = _corner[i] - pos;
-                sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
-            } while (sigend[1] == sigend[0] && _cornerAngle[i] + overflow <= maxAngle);     //sehr durchdahct: denn der letzte überprüfte punkt ist außerhalb des angegeben Bereichs, wichtig
+                sigend[1] = ((direction.X * delta.X + direction.Y * delta.Y) > 0f);
+            } while (sigend[1] == sigend[0] && ((_cornerAngle[i] <= maxAngle && !maxLoMin) || ( _cornerAngle[i] >= maxAngle && maxLoMin )));     //sehr durchdahct: denn der letzte überprüfte punkt ist außerhalb des angegeben Bereichs, wichtig
 
             if (sigend[1] != sigend[0])
             {
-                delta = (_corner[i] + _corner[i - 1]) * 0.5f;
+                delta = _corner[i];// (_corner[i] + _corner[i - 1]) * 0.5f;
                 mapPoint = new Map.MapPoint(_id, delta - pos);
             }
             else
