@@ -111,7 +111,7 @@ namespace buffalo
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
             map.Draw(spriteBatch); //only test actuallay
-            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 5, (int)subPos.Y - 5, 10, 10), Color.White);
+            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 10, (int)subPos.Y - 10, 20, 20), Color.White);
 
             spriteBatch.End();
             base.Draw(gameTime);

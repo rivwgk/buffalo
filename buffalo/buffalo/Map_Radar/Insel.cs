@@ -187,50 +187,23 @@ namespace buffalo
             bool maxLoMin = maxAngle < minAngle;        //wenn min > max
 
             int i = 0;
-            bool[] sigend = new bool[2] ;                //safes the last signed from the operateion ortogonalVec(direction) * _corner (beacuse, when the signed switch -> the last poiont and this have cross the radar line
-            Vector2 delta;              //delta vec to calculate sigend
             Map.MapPoint mapPoint;
-
-            direction = new Vector2(direction.Y, -direction.X);         //ortogonal Vec
-
-            while (_cornerAngle[i] < minAngle)//go to the first possiblepoint
-            {
-                ++i;
-                if (i == _corner.Length)
-                    i = 0;
-            }
-            if(!maxLoMin)
-                i--;
-
-            if (i < 0)
-                i += _corner.Length;
-
-            delta = _corner[i] - pos;
-            sigend[1] = (direction.X * delta.X + direction.Y * delta.Y > 0f);
-            
+            Vector2 interceptPoint = Vector2.Zero;
+            Vector2 nerstPoint = direction;         //point wih largest distance
+            Vector2 delta = new Vector2(0,0);
             do
             {
-                if (maxLoMin)
-                    i--;
-                else
-                    i++;
-                if (i == _corner.Length)
-                {
-                    i = 0;
-                }
-                if(i == -1)
-                {
-                    i = _corner.Length - 1;
-                }
-                sigend[0] = sigend[1];
-                delta = _corner[i] - pos;
-                sigend[1] = ((direction.X * delta.X + direction.Y * delta.Y) > 0f);
-            } while (sigend[1] == sigend[0] && ((_cornerAngle[i] <= maxAngle && !maxLoMin) || ( _cornerAngle[i] >= maxAngle && maxLoMin )));     //sehr durchdahct: denn der letzte überprüfte punkt ist außerhalb des angegeben Bereichs, wichtig
+                delta = _corner[i == 0 ? _corner.Length - 1 : i - 1] - _corner[i];
+                interceptPoint = Map_Radar.Algebra.Intercept(_corner[i], delta, pos, direction);
+                if (interceptPoint != Vector2.Zero)
+                    if (interceptPoint.Length() < nerstPoint.Length())
+                        nerstPoint = interceptPoint;
+                i++;
+            } while (i < _corner.Length);
 
-            if (sigend[1] != sigend[0])
+            if (nerstPoint != direction)
             {
-                delta = _corner[i];// (_corner[i] + _corner[i - 1]) * 0.5f;
-                mapPoint = new Map.MapPoint(_id, delta - pos);
+                mapPoint = new Map.MapPoint(_id, nerstPoint - pos);
             }
             else
                 mapPoint = new Map.MapPoint();

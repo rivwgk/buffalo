@@ -160,7 +160,7 @@ namespace buffalo
             _scale = 0.1700007f; //experiment
             _centerPosition = new Vector2(315, 230); //experiment
             _origin = new Vector2(1538, 1470);// boundignBox.Width / 2.0f, boundignBox.Height);
-            _radarPoints = new RadarPoints(360, _centerPosition, _radarDot);
+            _radarPoints = new RadarPoints(1024, _centerPosition, _radarDot);
         }
 
         public void Draw(SpriteBatch spriteBatch)
