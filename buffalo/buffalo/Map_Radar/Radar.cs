@@ -145,6 +145,9 @@ namespace buffalo
                         float fac = delta.Length() / count;
                         for(int i = 0 ; i < Math.abs(count); i += RADAR_DOT_SIZE)
                         {
+                            if(i == 0)
+                                if(prev.GetID() != p.GetID())
+                                    break;
                             spriteBatch.Draw(
                                 _radarDot,
                                 new Rectangle(x + i * fac, y + i * fac, RADAR_DOT_SIZE, RADAR_DOT_SIZE),
