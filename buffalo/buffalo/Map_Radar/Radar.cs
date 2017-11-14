@@ -124,6 +124,7 @@ namespace buffalo
 
             public void Draw(SpriteBatch spriteBatch)
             {
+                Points prev = _points[_points.Length];
                 foreach(Points p in _points)
                 {
                     if (p.GetObjId() != -1)
@@ -137,12 +138,21 @@ namespace buffalo
                         x -= x % RADAR_DOT_SIZE;                            //fancy Pixel eindruck
                         y -= y % RADAR_DOT_SIZE;
 
-                        spriteBatch.Draw(
-                            _radarDot, 
-                            new Rectangle(x, y, RADAR_DOT_SIZE, RADAR_DOT_SIZE), 
-                            Color.White * p.GetIntensity()
+                        Point delta = new Point(prev.GetPos().X - x, prev.GetPos().Y - y);
+                        delta.X -= delta.X % RADAR_DOT_SIZE;
+                        delta.Y -= delta.Y % RADAR_DOT_SIZE;
+                        int count = Math.abs(delta.Y) < Math.abs(delta.X) ? delta.X / RADAR_DOT_SIZE : delta.Y / RADAR_DOT_SIZE;
+                        float fac = delta.Length() / count;
+                        for(int i = 0 ; i < Math.abs(count); i += RADAR_DOT_SIZE)
+                        {
+                            spriteBatch.Draw(
+                                _radarDot,
+                                new Rectangle(x + i * fac, y + i * fac, RADAR_DOT_SIZE, RADAR_DOT_SIZE),
+                                color.White * p.GetIntensity()
                             );
+                        }
                     }
+                    prev = p;
                 }
             }
 
