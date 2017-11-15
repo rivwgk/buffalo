@@ -165,7 +165,6 @@ namespace buffalo
             for(int i = 0; i < _corner.Length; ++i)
             {
                 _cornerAngle[i] = VecAngle(_corner[i]);
-                Console.WriteLine("corner: " + _corner[i].Length());
             }
         }
 
@@ -196,7 +195,7 @@ namespace buffalo
                 delta = _corner[i == 0 ? _corner.Length - 1 : i - 1] - _corner[i];
                 interceptPoint = Map_Radar.Algebra.Intercept(_corner[i], delta, pos, direction);
                 if (interceptPoint != Vector2.Zero)
-                    if (interceptPoint.Length() < nerstPoint.Length())
+                    if ((interceptPoint - pos).Length() < nerstPoint.Length())
                         nerstPoint = interceptPoint;
                 i++;
             } while (i < _corner.Length);
