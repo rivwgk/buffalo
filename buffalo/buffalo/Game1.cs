@@ -40,7 +40,7 @@ namespace buffalo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            subPos = new Vector2(300, 50);
+            subPos = new Vector2(500, 200);
             base.Initialize();
         }
 
@@ -76,6 +76,7 @@ namespace buffalo
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        bool _mapNew = true; //TODO only Temporer for test
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -90,6 +91,13 @@ namespace buffalo
                 subPos.X -= 1;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
                 subPos.X += 1;
+            if (!_mapNew && Keyboard.GetState().IsKeyDown(Keys.R))
+            {
+                map = new Map(100, 100, 1, null);
+                _mapNew = true;
+            }
+            if (_mapNew && Keyboard.GetState().IsKeyUp(Keys.R))
+                _mapNew = false;
             radar.Update(subPos);
             base.Update(gameTime);
         }
@@ -111,7 +119,7 @@ namespace buffalo
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
             map.Draw(spriteBatch); //only test actuallay
-            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 10, (int)subPos.Y - 10, 20, 20), Color.White);
+            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 20, (int)subPos.Y - 20, 40, 40), Color.Red);
 
             spriteBatch.End();
             base.Draw(gameTime);

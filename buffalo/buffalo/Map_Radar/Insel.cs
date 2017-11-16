@@ -13,7 +13,7 @@ namespace buffalo
     class Insel
     {
         Random _rnd;
-        private const int CORER_RESULUTION = 5;
+        private const int CORER_RESULUTION = 4;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
         private float[] _cornerAngle;          
         private float VecAngle(Vector2 vec)         //return angle to vec(1, 0)
@@ -170,7 +170,7 @@ namespace buffalo
 
         public float getDistance(Vector2 pos)               //return minimal posible distance approximated
         {
-            return (_position - pos).Length() - _maxRad;
+            return 0f;// (_position - pos).Length() - _maxRad;
         }
 
         public bool Collision(Vector2 pos, float rot)       //collision with submarin, pos Submarin + direction (eliips Collisionbox)

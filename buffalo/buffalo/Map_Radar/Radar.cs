@@ -19,8 +19,8 @@ namespace buffalo
         const float FADEOUT_RATE = 0.97f; //intensity *= fadeOutRate
         const int RADAR_DOT_SIZE = 5;
         const float RADAR_OFFSET = 22f/180f * (float)Math.PI;
-        const int RADAR_DISPLAY_RAD = 130;
-        const float RADAR_RANGE = 300f;
+        const float RADAR_DISPLAY_RAD = 130f;
+        const float RADAR_RANGE = 100f;
 
         private Texture2D _radarLine;
         private Texture2D _radarDot;
