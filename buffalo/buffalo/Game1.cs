@@ -82,23 +82,7 @@ namespace buffalo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-                subPos.Y -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-                subPos.Y += 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-                subPos.X -= 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                subPos.X += 1;
-            if (!_mapNew && Keyboard.GetState().IsKeyDown(Keys.R))
-            {
-                map = new Map(100, 100, 1, null);
-                radar.SetNewMap(map);
-                _mapNew = true;
-            }
-            if (_mapNew && Keyboard.GetState().IsKeyUp(Keys.R))
-                _mapNew = false;
+        
             radar.Update(subPos);
             base.Update(gameTime);
         }
@@ -119,8 +103,6 @@ namespace buffalo
             spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
             spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             radar.Draw(spriteBatch);
-            map.Draw(spriteBatch); //only test actuallay
-            spriteBatch.Draw(kurs, new Rectangle((int)subPos.X - 20, (int)subPos.Y - 20, 40, 40), Color.Red);
 
             spriteBatch.End();
             base.Draw(gameTime);
