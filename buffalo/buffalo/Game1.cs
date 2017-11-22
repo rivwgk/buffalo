@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using System;
+
 namespace buffalo
 {
     /// <summary>
@@ -9,8 +11,19 @@ namespace buffalo
     /// </summary>
     public class Game1 : Game
     {
+        const int REGLER_SKALE_X = 56;
+        const int REGLER_SKALE_Y = 114;
+        const int REGLER_SKALE_WIDTH = 41;
+        const int REGLER_SKALE_HEIGHT = 111;
+
+        Vector2 subPos;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D pult;
+        Texture2D kurs;
+        Texture2D stuff1, stuff2;
+        Radar radar;
+        Map map;
         
         public Game1()
         {
@@ -27,7 +40,7 @@ namespace buffalo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            subPos = new Vector2(500, 200);
             base.Initialize();
         }
 
@@ -41,6 +54,12 @@ namespace buffalo
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            pult = Content.Load<Texture2D>("Oberfläche-Pult");
+            kurs = Content.Load<Texture2D>("Rahmen-Kursregler");
+            stuff1 = Content.Load<Texture2D>("Rahmen-Schieberegler");
+            stuff2 = Content.Load<Texture2D>("Schieberegler");
+            map = new Map(100, 100, 1, null);
+            radar = new Radar(Content, map);
         }
 
         /// <summary>
@@ -57,13 +76,14 @@ namespace buffalo
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        bool _mapNew = true; //TODO only Temporer for test
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
+        
+            radar.Update(subPos);
             base.Update(gameTime);
         }
 
@@ -76,7 +96,15 @@ namespace buffalo
             GraphicsDevice.Clear(Color.PaleVioletRed);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
 
+            spriteBatch.Draw(pult, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            spriteBatch.Draw(kurs, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            spriteBatch.Draw(stuff2, new Rectangle(REGLER_SKALE_X, REGLER_SKALE_Y, REGLER_SKALE_WIDTH, REGLER_SKALE_HEIGHT), Color.White);
+            spriteBatch.Draw(stuff1, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            radar.Draw(spriteBatch);
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
