@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace buffalo
     class Insel
     {
         Random _rnd;
-        private const int CORER_RESULUTION = 4;
+        private const int CORER_RESULUTION = 5;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
         private float[] _cornerAngle;          
         private float VecAngle(Vector2 vec)         //return angle to vec(1, 0)

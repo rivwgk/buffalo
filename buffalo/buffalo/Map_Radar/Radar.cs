@@ -18,7 +18,7 @@ namespace buffalo
         const float MIN_INTZESITY = 0.05f;
         const float FADEOUT_RATE = 0.97f; //intensity *= fadeOutRate
         const int RADAR_DOT_SIZE = 5;
-        const float RADAR_OFFSET = 22f/180f * (float)Math.PI;
+        const float RADAR_OFFSET = 22/180f * (float)Math.PI;
         const float RADAR_DISPLAY_RAD = 130f;
         const float RADAR_RANGE = 100f;
 
@@ -29,6 +29,8 @@ namespace buffalo
         private Vector2 _origin;
         private float _scale;
         private Map _map;
+        public void SetNewMap(Map map)
+        { _map = map; }
         private class RadarPoints
         {
             private int _resulution;
@@ -114,7 +116,7 @@ namespace buffalo
                 }
             }
 
-            public void Upadte()
+            public void Update()
             {
                 foreach (Points p in _points)
                 {
@@ -176,7 +178,7 @@ namespace buffalo
             _angle += 0.05f;
             if (_angle > Math.PI * 2)
                 _angle = 0f;
-            _radarPoints.Upadte();
+            _radarPoints.Update();
             {
                 Map.MapPoint collisionPoint = _map.RdarDetection(suPos, RADAR_RANGE, _angle);
                 if(collisionPoint.GetID() != -1)

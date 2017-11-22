@@ -16,6 +16,7 @@ namespace buffalo
     {
         private Insel[] _ilands;
         private Texture2D _myTex;
+        private Vector2 _targetPos;
         public class MapPoint
         {
             public MapPoint(int ilandId, Vector2 position)
@@ -40,7 +41,7 @@ namespace buffalo
             _ilands = new Insel[1];//numIlands];
             for(int i = 0; i < numIlands; ++i)
             {
-                _ilands[/*i*/0] = new Insel(200, 10, 0.1f, 0.8f, /*i*/0, new Vector2(300f, 250f));
+                _ilands[/*i*/0] = new Insel(200, 4, 0.6f, 0.8f, /*i*/0, new Vector2(300f, 250f));
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -72,7 +73,12 @@ namespace buffalo
                     );
             }
         }
-
+        //TODO
+        public enum COLLISION{NOTHING, ISLAND, TARGET}; 
+        public COLLISION submarineCollision(Vector2 position, float angle)
+        {
+            return COLLISION.NOTHING;
+        }
         public MapPoint RdarDetection(Vector2 position, float length, float angle) //direction.Length is importend
         {
             Vector2 direction = new Vector2(length * (float)Math.Cos(angle), length * (float)Math.Sin(angle));

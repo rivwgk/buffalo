@@ -94,6 +94,7 @@ namespace buffalo
             if (!_mapNew && Keyboard.GetState().IsKeyDown(Keys.R))
             {
                 map = new Map(100, 100, 1, null);
+                radar.SetNewMap(map);
                 _mapNew = true;
             }
             if (_mapNew && Keyboard.GetState().IsKeyUp(Keys.R))
