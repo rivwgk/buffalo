@@ -18,6 +18,7 @@ namespace buffalo
 
         Vector2 subPos;
         GraphicsDeviceManager graphics;
+        ContentManager contentManager;
         SpriteBatch spriteBatch;
         Texture2D pult;
         Texture2D kurs;
@@ -27,6 +28,7 @@ namespace buffalo
         
         public Game1()
         {
+            contentManager = ContentManager.Instance();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
