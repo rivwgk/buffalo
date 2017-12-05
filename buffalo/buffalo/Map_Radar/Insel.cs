@@ -37,7 +37,7 @@ namespace buffalo
         private float _maxRad;
         public Insel(float maxRad, int mainCornerNum, float regularity, float spiks, int id, Vector2 centerPosition)    //-, -, 1-0, 1-0
         {
-            _maxRad = 0f;
+            _maxRad = maxRad;
             int subCornerSum = 0;                       //every Resulution Point more is async split from every edge))
             for (int i = 1; i <= CORER_RESULUTION; ++i)
                 subCornerSum += subCornerSum + 1;
@@ -170,7 +170,7 @@ namespace buffalo
 
         public float getDistance(Vector2 pos)               //return minimal posible distance approximated
         {
-            return 0f;// (_position - pos).Length() - _maxRad;
+            return (_position - pos).Length() - _maxRad;
         }
 
         public bool Collision(Vector2 pos, float rot)       //collision with submarin, pos Submarin + direction (eliips Collisionbox)
