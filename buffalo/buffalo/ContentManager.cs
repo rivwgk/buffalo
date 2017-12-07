@@ -12,7 +12,7 @@ namespace buffalo
             random = new Random();
         }
 
-        public static ContentManager Instance
+        public static ContentManager Instance()
         {
             get
             {
