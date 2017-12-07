@@ -29,6 +29,7 @@ namespace buffalo
         private Vector2 _origin;
         private float _scale;
         private Map _map;
+        private Effect _blendingEffect;
         public void SetNewMap(Map map)
         { _map = map; }
         private class RadarPoints
