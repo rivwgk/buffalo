@@ -144,7 +144,7 @@ namespace buffalo
                             spriteBatch.Draw(
                                 _radarDot,
                                 new Rectangle(x ,y, RADAR_DOT_SIZE, RADAR_DOT_SIZE),
-                                Color.White * p.GetIntensity()
+                                Color.White
                                 );
                     }
                     prev = p;
@@ -156,22 +156,28 @@ namespace buffalo
         Random _rnd;
         public Radar(Microsoft.Xna.Framework.Content.ContentManager Content, Map map)
         {
-            _rnd = new Random();
             _map = map;
             _radarLine = Content.Load<Texture2D>("Radar-Rotor-Icon");
             _radarDot = Content.Load<Texture2D>("Radar-Objekt-Icon");
-
+            _blendingEffect = Content.Load<Effect>("RadarShader");
             _angle = 0.5f;
             _scale = 0.1700007f; //experiment
             _centerPosition = new Vector2(315, 230); //experiment
             _origin = new Vector2(1538, 1470);// boundignBox.Width / 2.0f, boundignBox.Height);
             _radarPoints = new RadarPoints(1024, _centerPosition, _radarDot);
+            _blendingEffect.Parameters["RadarCenter"].SetValue(_centerPosition);
+            _blendingEffect.Parameters["RadarRadSq"].SetValue(RADAR_DISPLAY_RAD * RADAR_DISPLAY_RAD);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            //Console.WriteLine("mhhh");
+            //_blendingEffect.Parameters["RadarAngleCos"].SetValue(1.1f);
+            _blendingEffect.CurrentTechnique.Passes[1].Apply(); //enable Radar Shader
             spriteBatch.Draw(_radarLine, _centerPosition, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
             _radarPoints.Draw(spriteBatch);
+
+            _blendingEffect.CurrentTechnique.Passes[0].Apply(); //disable Radar Shader
         }
 
         public void Update(Vector2 suPos)

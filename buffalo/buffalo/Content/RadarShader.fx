@@ -1,41 +1,31 @@
-﻿float4x4 Wolrd;
-float4x4 View;
-float4x4 Projection;
-
-float4 AmbientColor = float4(1.f, 1.f, 1.f, 1.f);
-float4 AmbientIntensity = 0.5f;
-
-struct VertexShaderInput
+﻿sampler s0;
+float2 RadarCenter;
+float RadarRadSq;	//Radar radius Quadriert
+float RadarAngleCos;	//Cos des Winkels zu Vector (1 0)^T
+float4 _PixelShader(float2 coord: TEXCOORD0) : COLOR0		//standart Shader
 {
-	float4 Position : POSITION0;
-};
-
-struct VertexShaderOutput
-{
-	float4 Position : POSITION0;
-};
-
-VertexShaderOutput _VertexShader(VertexShaderInput input)
-{
-	VertexShaderOutput output;
-
-	float4 worldPosition = mul(input.Position, World);
-	float4 viewPosition = mul(worldPosition, View);
-	output.Position = mul(viewPosition, Projection);
-
-	return output;
+	return tex2D(s0, coord);
 }
 
-float4 _PixelShader(VertexShaderOutput input) : COLOR0
+float4 _RadarShader(float2 coord: TEXCOORD0) : COLOR0
 {
-	return AmbientColor * AmbientIntensity;
+	float2 d;
+	d.x = coord.x - RadarCenter.x;
+	d.y = coord.y - RadarCenter.y;
+	float2 dSq = d * d;
+	if (d.x + d.y > 1 &&  RadarRadSq > 0)
+		return float4(1, 0, 0, 1);
+	return tex2D(s0, coord);
 }
 
 technique Ambient
 {
 	pass Pass1
 	{
-		VertexShader = compile vs_2_0 _VertexShader();
-		_PixelShader = compile ps_2_0 _PixelShader();
+		PixelShader = compile ps_2_0 _PixelShader();
+	}
+	pass Radar
+	{
+		PixelShader = compile ps_2_0 _RadarShader();
 	}
 }

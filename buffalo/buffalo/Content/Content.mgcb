@@ -157,3 +157,9 @@
 /processorParam:TextureFormat=Color
 /build:Rahmen-Schieberegler.png
 
+#begin RadarShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:RadarShader.fx
+

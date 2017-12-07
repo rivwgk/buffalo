@@ -98,7 +98,7 @@ namespace buffalo
             GraphicsDevice.Clear(Color.PaleVioletRed);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             spriteBatch.Draw(pult, GraphicsDevice.PresentationParameters.Bounds, Color.White);
             spriteBatch.Draw(kurs, GraphicsDevice.PresentationParameters.Bounds, Color.White);

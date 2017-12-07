@@ -46,6 +46,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ContentManager.cs" />
     <Compile Include="Map_Radar\Algebra.cs" />
     <Compile Include="Map_Radar\Insel.cs" />
     <Compile Include="Map_Radar\Map.cs" />
