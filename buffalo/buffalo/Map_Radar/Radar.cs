@@ -15,8 +15,6 @@ namespace buffalo
 {
     class Radar
     {
-        const float MIN_INTZESITY = 0.05f;
-        const float FADEOUT_RATE = 0.97f; //intensity *= fadeOutRate
         const int RADAR_DOT_SIZE = 5;
         const float RADAR_OFFSET = 22/180f * (float)Math.PI;
         const float RADAR_DISPLAY_RAD = 130f;
@@ -52,25 +50,26 @@ namespace buffalo
                 private int _objId;
                 public int GetObjId() { return _objId; }
 
-                private float _intesity;
+                private int _intesity;
                 public float GetIntensity() { return _intesity; }
-
-                public Points()
+                private int _maxIntensity;
+                public Points(int maxIntensity)
                 {
+                    _maxIntensity = maxIntensity;
                     _objId = -1; //unselected
                     _pos = new Vector2(0, 0);
-                    _intesity = 0.0f;
+                    _intesity = 0;
                 }
                 public void Update()
                 {
                     if (_objId == -1)
                         return;
 
-                    _intesity *= FADEOUT_RATE;          //fadeout
+                    _intesity -= 1;
 
-                    if (_intesity < MIN_INTZESITY)  //delet
+                    if (_intesity < 2)  //delet
                     {
-                        _intesity = 0f;
+                        _intesity = 0;
                         _objId = -1;    
                     }
                 }
@@ -79,7 +78,7 @@ namespace buffalo
                 {
                     _objId = objId;
                     _pos = pos;
-                    _intesity = 1f;
+                    _intesity = _maxIntensity;
                 }
             }
             private Points[] _points;
@@ -95,7 +94,7 @@ namespace buffalo
                 _points = new Points[_resulution];
                 for(int i = 0; i < _resulution; ++i)
                 {
-                    _points[i] = new Points();
+                    _points[i] = new Points(_resulution);
                 }
             }
             public void SetPoint(float angle, Vector2 position, int objId)
@@ -166,13 +165,13 @@ namespace buffalo
             _origin = new Vector2(1538, 1470);// boundignBox.Width / 2.0f, boundignBox.Height);
             _radarPoints = new RadarPoints(1024, _centerPosition, _radarDot);
             _blendingEffect.Parameters["RadarCenter"].SetValue(_centerPosition);
-            _blendingEffect.Parameters["RadarRadSq"].SetValue(RADAR_DISPLAY_RAD * RADAR_DISPLAY_RAD);
+            //_blendingEffect.Parameters["RadarRadSq"].SetValue(RADAR_DISPLAY_RAD * RADAR_DISPLAY_RAD);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             //Console.WriteLine("mhhh");
-            //_blendingEffect.Parameters["RadarAngleCos"].SetValue(1.1f);
+            _blendingEffect.Parameters["RadarAngle"].SetValue(_angle);
             _blendingEffect.CurrentTechnique.Passes[1].Apply(); //enable Radar Shader
             spriteBatch.Draw(_radarLine, _centerPosition, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
             _radarPoints.Draw(spriteBatch);

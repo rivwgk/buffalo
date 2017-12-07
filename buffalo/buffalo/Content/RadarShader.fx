@@ -1,21 +1,26 @@
-﻿sampler s0;
+﻿static const float PI = 3.14159265f;
+sampler s0;
 float2 RadarCenter;
 float RadarRadSq;	//Radar radius Quadriert
-float RadarAngleCos;	//Cos des Winkels zu Vector (1 0)^T
+float RadarAngle;
 float4 _PixelShader(float2 coord: TEXCOORD0) : COLOR0		//standart Shader
 {
 	return tex2D(s0, coord);
 }
-
-float4 _RadarShader(float2 coord: TEXCOORD0) : COLOR0
+float f(float x) { x = 1.f - x;  return  x*x; }	//fade out
+float4 _RadarShader(float2 coord: TEXCOORD0, float2 pos : VPOS) : COLOR0
 {
-	float2 d;
-	d.x = coord.x - RadarCenter.x;
-	d.y = coord.y - RadarCenter.y;
+	float2 d = pos - RadarCenter;
 	float2 dSq = d * d;
-	if (d.x + d.y > 1 &&  RadarRadSq > 0)
-		return float4(1, 0, 0, 1);
-	return tex2D(s0, coord);
+	
+	float angle = dSq.x / (dSq.x + dSq.y) * ( d.x > 0 ? 1.f : -1.f);
+	angle = acos(angle);
+	if (d.y > 0)	//wenn winkel > 180°
+		angle = 2 * PI - angle;
+
+	float delta = abs((angle > RadarAngle ? 2*PI : 0.f) - abs(angle - RadarAngle));	//entfernung, problem overflow der grad zahlen 
+	float intensity = f(delta / (2.f*PI));
+	return tex2D(s0, coord) * intensity;
 }
 
 technique Ambient
@@ -26,6 +31,6 @@ technique Ambient
 	}
 	pass Radar
 	{
-		PixelShader = compile ps_2_0 _RadarShader();
+		PixelShader = compile ps_3_0 _RadarShader();
 	}
 }
