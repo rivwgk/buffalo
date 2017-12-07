@@ -28,7 +28,7 @@ namespace buffalo
         
         public Game1()
         {
-            contentManager = ContentManager.Instance();
+            contentManager = ContentManager.Instance;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
