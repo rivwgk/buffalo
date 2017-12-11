@@ -24,6 +24,7 @@ namespace buffalo
         private Texture2D _radarDot;
         private float _angle;
         private Vector2 _centerPosition;
+        private Vector2 _assatOffset;
         private Vector2 _origin;
         private float _scale;
         private Map _map;
@@ -67,7 +68,7 @@ namespace buffalo
 
                     _intesity -= 1;
 
-                    if (_intesity < 2)  //delet
+                    if (_intesity < 10)  //delet
                     {
                         _intesity = 0;
                         _objId = -1;    
@@ -162,7 +163,8 @@ namespace buffalo
             _angle = 0.5f;
             _scale = 0.1700007f; //experiment
             _centerPosition = new Vector2(315, 230); //experiment
-            _origin = new Vector2(1538, 1470);// boundignBox.Width / 2.0f, boundignBox.Height);
+            _assatOffset = new Vector2(0, 21);
+            _origin = new Vector2(1532, 1467);      
             _radarPoints = new RadarPoints(1024, _centerPosition, _radarDot);
             _blendingEffect.Parameters["RadarCenter"].SetValue(_centerPosition);
             //_blendingEffect.Parameters["RadarRadSq"].SetValue(RADAR_DISPLAY_RAD * RADAR_DISPLAY_RAD);
@@ -170,10 +172,9 @@ namespace buffalo
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //Console.WriteLine("mhhh");
             _blendingEffect.Parameters["RadarAngle"].SetValue(_angle);
             _blendingEffect.CurrentTechnique.Passes[1].Apply(); //enable Radar Shader
-            spriteBatch.Draw(_radarLine, _centerPosition, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(_radarLine, _centerPosition + _assatOffset, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
             _radarPoints.Draw(spriteBatch);
 
             _blendingEffect.CurrentTechnique.Passes[0].Apply(); //disable Radar Shader
@@ -181,6 +182,7 @@ namespace buffalo
 
         public void Update(Vector2 suPos)
         {
+            
             _angle += 0.05f;
             if (_angle > Math.PI * 2)
                 _angle = 0f;

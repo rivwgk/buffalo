@@ -12,7 +12,8 @@ float4 _RadarShader(float2 coord: TEXCOORD0, float2 pos : VPOS) : COLOR0
 {
 	float2 d = pos - RadarCenter;
 	float2 dSq = d * d;
-	
+	if (dSq.x + dSq.y <= 1)
+		return float4(0.f, 0.f, 1.f, 1.f);
 	float angle = dSq.x / (dSq.x + dSq.y) * ( d.x > 0 ? 1.f : -1.f);
 	angle = acos(angle);
 	if (d.y > 0)	//wenn winkel > 180°
