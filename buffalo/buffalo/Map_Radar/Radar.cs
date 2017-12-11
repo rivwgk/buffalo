@@ -51,35 +51,29 @@ namespace buffalo
                 private int _objId;
                 public int GetObjId() { return _objId; }
 
-                private int _intesity;
-                public float GetIntensity() { return _intesity; }
-                private int _maxIntensity;
+                private float _createAngle;
                 public Points(int maxIntensity)
                 {
-                    _maxIntensity = maxIntensity;
                     _objId = -1; //unselected
                     _pos = new Vector2(0, 0);
-                    _intesity = 0;
+                    _createAngle = -1f;
                 }
-                public void Update()
+                public void Update(float angle)
                 {
                     if (_objId == -1)
                         return;
 
-                    _intesity -= 1;
-
-                    if (_intesity < 10)  //delet
+                    if (_createAngle > angle && Math.Abs(_createAngle - angle) < 0.2f)  //delet
                     {
-                        _intesity = 0;
                         _objId = -1;    
                     }
                 }
                 
-                public void SetPoint(int objId, Vector2 pos)
+                public void SetPoint(int objId, Vector2 pos, float angle)
                 {
                     _objId = objId;
                     _pos = pos;
-                    _intesity = _maxIntensity;
+                    _createAngle = angle;
                 }
             }
             private Points[] _points;
@@ -103,7 +97,7 @@ namespace buffalo
                 int radPos = (int)(angle / (float)Math.PI / 2f * _resulution);
                 if (radPos != _lastUpdatedAngle)                                     //dont overwrite a actually new Point
                 {
-                    _points[radPos].SetPoint(objId, position);
+                    _points[radPos].SetPoint(objId, position, angle);
                     _lastUpdatedAngle = radPos;
                 }
             }
@@ -112,16 +106,16 @@ namespace buffalo
                 int radPos = (int) (angle / (float)Math.PI / 2f * _resulution);
                 if (radPos != _lastUpdatedAngle)                                     //dont overwrite a actually new Point
                 {
-                    _points[radPos].SetPoint(objId, new Vector2((float)Math.Cos(angle) * distance, (float)Math.Sin(angle) * distance));
+                    _points[radPos].SetPoint(objId, new Vector2((float)Math.Cos(angle) * distance, (float)Math.Sin(angle) * distance), angle);
                     _lastUpdatedAngle = radPos;
                 }
             }
 
-            public void Update()
+            public void Update(float angle)
             {
                 foreach (Points p in _points)
                 {
-                    p.Update();
+                    p.Update(angle);
                 }
             }
 
@@ -186,7 +180,7 @@ namespace buffalo
             _angle += 0.05f;
             if (_angle > Math.PI * 2)
                 _angle = 0f;
-            _radarPoints.Update();
+            _radarPoints.Update(_angle);
             {
                 Map.MapPoint collisionPoint = _map.RdarDetection(suPos, RADAR_RANGE, _angle);
                 if(collisionPoint.GetID() != -1)
