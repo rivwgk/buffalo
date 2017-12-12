@@ -35,14 +35,40 @@ namespace buffalo
             public Vector2 GetPos()
             { return (_ilandId < 0 ? new Vector2(0,0) : _position); }
         }
+        private bool IllandCollsion(int numIlands)
+        {
+            for (int i = 1; i < numIlands; ++i)
+            {
+                for(int j = i - 1; j >= 0; --j)
+                {
+                    if ((_ilands[i].GetPosition() - _ilands[j].GetPosition()).LengthSquared() < (_ilands[i].GetMaxRad() + _ilands[j].GetMaxRad()))
+                        return true;
+                }
+            }
+            return false;
+        }
         public Map(int width, int height, int numIlands, Texture2D ilandTex)
         {
+            ContentManager cM = ContentManager.Instance;
             _myTex = ilandTex;
-            _ilands = new Insel[1];//numIlands];
-            for(int i = 0; i < numIlands; ++i)
+            _ilands = new Insel[numIlands];
+            Vector2[] randPos = new Vector2[numIlands];
+            float[] rad = new float[numIlands];
+            for (int i = 0; i < numIlands; ++i)
             {
-                _ilands[/*i*/0] = new Insel(200, 4, 0.6f, 0.8f, /*i*/0, new Vector2(300f, 250f));
+                randPos[i] = new Vector2(cM.random.Next() % width, cM.random.Next() % height);
+                rad[i] = cM.random.Next() % 300  + 200f;    //inseln der größe 200 - 500
             }
+            int j = 0;
+            do
+            {
+                _ilands[j] = new Insel(rad[j], 4, 0.6f, 0.8f, j, randPos[j]);   //place random iland
+                if(this.IllandCollsion(j + 1) )
+                {
+                    //stuff
+                }
+                j++;
+            } while (j < numIlands);
         }
         public void Draw(SpriteBatch spriteBatch)
         {

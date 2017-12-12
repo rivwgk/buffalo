@@ -147,7 +147,6 @@ namespace buffalo
 
         }
         RadarPoints _radarPoints;
-        Random _rnd;
         public Radar(Microsoft.Xna.Framework.Content.ContentManager Content, Map map)
         {
             _map = map;

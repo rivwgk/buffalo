@@ -12,7 +12,6 @@ namespace buffalo
 {
     class Insel
     {
-        Random _rnd;
         private const int CORER_RESULUTION = 5;
         private Vector2[] _corner;                  //Kordinates in Map Coordinates, NOT Px
         private float[] _cornerAngle;          
@@ -33,8 +32,10 @@ namespace buffalo
             return result;
         }
         private Vector2 _position;
+        public Vector2 GetPosition() { return _position; }
         private int _id;
         private float _maxRad;
+        public float GetMaxRad() { return _maxRad; }
         public Insel(float maxRad, int mainCornerNum, float regularity, float spiks, int id, Vector2 centerPosition)    //-, -, 1-0, 1-0
         {
             _maxRad = maxRad;
@@ -43,7 +44,6 @@ namespace buffalo
                 subCornerSum += subCornerSum + 1;
 
             Console.WriteLine("ScubCorner:" + subCornerSum);
-            _rnd = new Random();
             _position = centerPosition;
             _corner = new Vector2[mainCornerNum * (subCornerSum + 1)];
             _id = id;
@@ -53,10 +53,10 @@ namespace buffalo
             float[] angles = new float[mainCornerNum + 1];
             angles[0] = 0f;
             float dAngle;
-
+            ContentManager cM = ContentManager.Instance;
             for(int i = 1; i < mainCornerNum + 1; ++i)  //init mainCorners on Rad pos
             {
-                dAngle = angle + (2 * (float)_rnd.NextDouble() - 1f) * angle * regularity; //result C(6) -> 60° +- 60°*regularity
+                dAngle = angle + (2 * (float)cM.random.NextDouble() - 1f) * angle * regularity; //result C(6) -> 60° +- 60°*regularity
                 angles[i] = angles[i - 1] + dAngle;
             }
 
@@ -64,7 +64,7 @@ namespace buffalo
             float r;
             for(int i = 0; i < mainCornerNum; ++i) ///set corner Points
             {
-                r = maxRad - maxRad * spiks * (float)_rnd.NextDouble();
+                r = maxRad - maxRad * spiks * (float)cM.random.NextDouble();
                 Console.WriteLine(r);
                 angles[i] *= resizeAngleScale;
                 _corner[(subCornerSum + 1) * i] = new Vector2((float)Math.Cos(angles[i]) * r, (float)Math.Sin(angles[i]) * r);
@@ -74,7 +74,7 @@ namespace buffalo
             int subResulutionLvl = subCornerSum;
 
             byte[] signeds = new byte[((subCornerSum +1) * mainCornerNum + 7) / 8]; //+1 because of trumc, needed for direction of ortogonal offset    
-            _rnd.NextBytes(signeds);
+            cM.random.NextBytes(signeds);
             float ortogonalOffset;
             float centerOffset;
             float ortogonalMaxOffset;
@@ -101,7 +101,7 @@ namespace buffalo
                     nighbarPoints[1] = _corner[ (cornerNum + subResulutionLvl >= _corner.Length) ? cornerNum + subResulutionLvl - _corner.Length : cornerNum + subResulutionLvl ];
 
                     Vector2 delta = nighbarPoints[1] - nighbarPoints[0];
-                    centerOffset = 0.5f + (float)_rnd.NextDouble() * regularity - regularity / 2;
+                    centerOffset = 0.5f + (float)cM.random.NextDouble() * regularity - regularity / 2;
                     delta *= centerOffset;
                     Vector2 newPos = nighbarPoints[0] + delta;
                     /*
@@ -127,7 +127,7 @@ namespace buffalo
                      * vec(x,y) = rotated delta
                     */
                     bool sigend = (signeds[cornerNum / 8] & (1 << cornerNum % 8)) > 0;
-                    ortogonalOffset = (float)_rnd.NextDouble() * spiks * ( sigend ? -1f : 1f);    //C# is unable to convert int too bool
+                    ortogonalOffset = (float)cM.random.NextDouble() * spiks * ( sigend ? -1f : 1f);    //C# is unable to convert int too bool
                     bool realation = nighbarPoints[0].LengthSquared() > nighbarPoints[1].LengthSquared();
                     Vector2 collisionCorner; //vec(o,p);
                     if (sigend)                                                                   //rotation 90° + or -
