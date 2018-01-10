@@ -15,6 +15,8 @@ namespace buffalo
     class Map
     {
         private Insel[] _ilands;
+        public Insel getIland(int i){if(i < _ilands.Lenght) return _ilands[i]; else return null;}
+        public int getAmountIlands(){return _ilands.Lenght;}
         private Texture2D _myTex;
         private Vector2 _targetPos;
         public class MapPoint
