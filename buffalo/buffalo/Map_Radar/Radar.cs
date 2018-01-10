@@ -63,7 +63,7 @@ namespace buffalo
                     if (_objId == -1)
                         return;
 
-                    if (_createAngle > angle && Math.Abs(_createAngle - angle) < 0.2f)  //delet
+                    if (_createAngle > angle && Math.Abs(_createAngle - angle) < 0.4f)  //delet
                     {
                         _objId = -1;    
                     }
@@ -168,10 +168,10 @@ namespace buffalo
         {
             _blendingEffect.Parameters["RadarAngle"].SetValue(_angle);
             _blendingEffect.CurrentTechnique.Passes[1].Apply(); //enable Radar Shader
-            spriteBatch.Draw(_radarLine, _centerPosition + _assatOffset, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
             _radarPoints.Draw(spriteBatch);
-
             _blendingEffect.CurrentTechnique.Passes[0].Apply(); //disable Radar Shader
+            spriteBatch.Draw(_radarLine, _centerPosition + _assatOffset, null, Color.White, _angle + RADAR_OFFSET, _origin, _scale, SpriteEffects.None, 0f);
+           
         }
 
         public void Update(Vector2 suPos)
