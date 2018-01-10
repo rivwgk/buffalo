@@ -33,8 +33,10 @@ namespace buffalo
             return result;
         }
         private Vector2 _position;
+        public Vector2 getPosition(){return _position;}
         private int _id;
         private float _maxRad;
+        public float getMaxRad(){return _maxRad;}
         public Insel(float maxRad, int mainCornerNum, float regularity, float spiks, int id, Vector2 centerPosition)    //-, -, 1-0, 1-0
         {
             _maxRad = maxRad;
@@ -167,7 +169,6 @@ namespace buffalo
                 _cornerAngle[i] = VecAngle(_corner[i]);
             }
         }
-
         public float getDistance(Vector2 pos)               //return minimal posible distance approximated
         {
             return (_position - pos).Length() - _maxRad;
